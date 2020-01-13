@@ -1,0 +1,11 @@
+<div class="wrapper">
+    <app-sidebar></app-sidebar>
+    <!-- Page Content  -->
+    <div id="content" (swiperight)="sharedsvc.sliderOpen()" (swipeleft)="location.back()">
+        <app-header></app-header>
+        <router-outlet></router-outlet>        
+    </div>
+</div>
+
+<div class="overlay" [slider]="overlayFlag" (click)="sharedsvc.sliderToggle()" (swipeleft)="sharedsvc.sliderClose()"></div>
+<app-spinner></app-spinner>

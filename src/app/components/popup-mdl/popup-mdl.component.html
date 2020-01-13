@@ -1,0 +1,58 @@
+<!-- Modal -->
+<div class="backdrop" [ngStyle]="{'display':popDisplay}"></div>
+<div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':'block'}">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">{{formEntity.title}}</h4>
+                <button type="button" class="close" (click)="onPopupCloseButton()"><span aria-hidden="true">&times;</span></button>
+            </div>
+            <div *ngIf="formEntity.formControls">
+                <form class="form-horizontal" [formGroup]='cform' (ngSubmit)="onFormSubmit()">
+                    <div class="modal-body">
+                        <div *ngFor="let control of formEntity.formControls">
+                        <div [ngSwitch]="control.inputType">
+                            <!--input text control -->
+                            <div *ngSwitchCase=0 class="form-group">
+                                <label [attr.for]="control.name" class="col-xs-2 small control-label">{{control.lableName}} :</label>
+                                <div class="col-xs-10">
+                                    <input type="text" [formControlName]="control.name" class="form-control"  placeholder="Enter {{control.lableName}} here">
+                                </div>
+                            </div>
+                            <!--input number control -->
+                            <div *ngSwitchCase=1 class="form-group">
+                                <label [attr.for]="control.name" class="col-xs-2 control-label">{{control.lableName}} :</label>
+                                <div class="col-xs-10">
+                                    <input type="number" [formControlName]="control.name" class="form-control" placeholder="Enter {{control.lableName}} here">
+                                </div>
+                            </div>
+                            <!--dropdown control -->
+                            <div *ngSwitchCase=2 class="form-group">
+                                <label [attr.for]="control.name" class="col-xs-2 control-label">{{control.lableName}} :</label>
+                                <div class="col-xs-10">
+                                    <select class="form-control"  [formControlName]="control.name">
+                                    <option *ngFor="let option of control.options" [ngValue]="option" >{{option}}</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <!--textarea control -->
+                            <div *ngSwitchCase=4 class="form-group">
+                                <label [attr.for]="control.name" class="col-xs-2 control-label">{{control.lableName}} :</label>
+                                <div class="col-xs-10">
+                                    <textarea class="form-control" [formControlName]="control.name" [rows]="control.rows||4" placeholder="Enter {{control.lableName}} here" ></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        <!--END input type switch  -->
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" *ngFor="let btn of formEntity.formActions" class="btn btn-default" (click)="onExternalBtnClick(btn.name)">{{btn.displayName}}</button>
+                        <button type="submit" *ngIf="formEntity.isSubmitBtn"  [disabled]="!cform.valid" class="btn btn-default">Submit</button>
+                        <button type="button" class="btn btn-default" (click)="onPopupCloseButton()">Close</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

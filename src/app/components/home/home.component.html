@@ -1,0 +1,38 @@
+<div class="container">
+  <div class="text-center">
+    <h1>WELCOME {{userName}}</h1>
+    <p>
+      Swipe right to slider open, swipe left to navigate back
+    </p>
+    <a (click)="addTopicTypePopup()" href="javascript:void(0);">Create Topic Type</a> |
+    <a (click)="logOut()" href="javascript:void(0);">signOut</a>
+    <br /><br />
+    <h4>Topics <b>List</b></h4>
+
+    <table class="table">
+      <!-- <thead class="thead-dark">
+        <tr>
+          <th scope="col">#</th>
+          <th scope="col">Topics</th>
+          <th scope="col">Actions</th>
+        </tr>
+      </thead> -->
+      <tbody>
+        <tr *ngFor="let type of topicTypes">
+          <td align="left">{{type.Type}}
+            <span *ngIf="type?.postsCount" class="badge badge-primary badge-pill">{{type?.postsCount}}</span>
+          </td>
+          <td>
+            <small class="text-muted float-right">
+              <a (click)="edit(type)" href="javascript:void(0);">Edit</a> |
+              <a (click)="delete(type)" href="javascript:void(0);">Delete</a>
+            </small>
+          </td>
+        </tr>        
+      </tbody>
+    </table>
+
+  </div>
+</div>
+<popup *ngIf="popupData.popupDisplay==='block'" [dataContext]="popupData" (popupDisplay)="popupDisplayEvent($event)">
+</popup>

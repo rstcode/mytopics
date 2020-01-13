@@ -1,0 +1,34 @@
+<a (click)="AddTopic()" href="javascript:void(0);">Add new topic</a>
+<br /><br />
+
+<p *ngIf="topics.length==0">Create your new topic here..</p>
+<div>
+  <div *ngFor="let topic of topics">
+
+    <h5>{{topic.Header}} :</h5>
+    <p [innerHTML]="topic.Description|str2obj"></p>
+    <div class="float-right">
+      <small class="text-muted">
+        {{topic.ModifiedDate}} | 
+        <a (click)="EditTopic(topic)" href="javascript:void(0);">Edit</a> |
+        <a (click)="DeleteTopic(topic)" href="javascript:void(0);">Delete</a>
+      </small>
+    </div>
+    <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> -->
+    <div class="line"></div>
+  </div>
+</div>
+
+<popup *ngIf="popupData.popupDisplay==='block'" [dataContext]="popupData" (popupDisplay)="popupDisplayEvent($event)"></popup>
+<!--         
+        <a *ngFor="let topic of topics" href="javascript:void(0);" class="list-group-item list-group-item-action flex-column align-items-start">
+          <div class="d-flex w-100 justify-content-between" (click)="topic.ShowContent=!topic.ShowContent; openAll=false;">
+            <h5 class="mb-1">{{topic.Header}} :</h5>
+            <small class="text-muted">
+              <a (click)="EditTopic(topic)" href="javascript:void(0);">Edit</a> |
+              <a (click)="DeleteTopic(topic)" href="javascript:void(0);">Delete</a> |
+              {{topic.ModifiedDate}}</small>
+          </div>
+          <p class="mb-1 collapse" [ngClass]="{'show ':openAll || topic.ShowContent}" [innerHTML]="topic.Description|str2obj"></p>
+          <small *ngIf="!topic.ShowContent" [innerHTML]="topic.Description|descMin:40" class="text-muted"></small>
+        </a> -->
