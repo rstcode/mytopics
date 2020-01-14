@@ -9,7 +9,7 @@ import { SpinnerService } from '../spinner/spinner.service';
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  IsLogin: boolean = false;
+  IsLogin = false;
   constructor(private auth: FireAuthService, private route: ActivatedRoute, private router: Router, private loader: SpinnerService) { }
   ngOnInit() {
     this.auth.loginStatus.subscribe(p => {

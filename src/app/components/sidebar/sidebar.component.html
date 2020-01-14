@@ -1,5 +1,5 @@
 <!-- Sidebar  -->
-<nav (swipeleft)="sharedsvc.sliderClose()" id="sidebar" [slider]="sliderFlag"> 
+<nav (swipeleft)="sharedsvc.sliderClose()" id="sidebar" [slider]="sliderFlag">
     <div (click)="sharedsvc.sliderToggle()" id="dismiss">
         <i class="fas fa-arrow-left"></i>
     </div>
@@ -9,13 +9,17 @@
     </div>
 
     <ul class="list-unstyled components">
-        <!-- <p>Dummy Heading</p>         -->
+        <!-- <p>Dummy Heading</p> -->
         <li>
             <a (click)="addTopicTypePopup()" href="javascript:void(0)">Create Topic</a>
         </li>
+        <li>
+            <p *ngIf="!topicTypes || topicTypes.length==0">Loading Topics..</p>
+        </li>
         <li *ngFor="let topicType of topicTypes| rduplicates" [ngClass]="{'active': topicType.Type===currentTT}">
             <a (click)="navigateTo(topicType)" href="javascript:void(0)">{{topicType.Type}}</a>
-        </li>        
+        </li>
     </ul>
 </nav>
-<popup *ngIf="popupData.popupDisplay==='block'" [dataContext]="popupData" (popupDisplay)="popupDisplayEvent($event)"></popup>
+<popup *ngIf="popupData.popupDisplay==='block'" [dataContext]="popupData" (popupDisplay)="popupDisplayEvent($event)">
+</popup>

@@ -13,7 +13,7 @@ import { User } from '../models/entities';
 export class FireAuthService {
   user: Observable<User>;
   currentUser: User = null;
-  redirectUrl: string = '';
+  redirectUrl = '';
   private loginBS = new BehaviorSubject<boolean>(false);
   loginStatus = this.loginBS.asObservable();
   constructor(private afAuth: AngularFireAuth, private afs: AngularFirestore, private router: Router, private loader: SpinnerService) {
@@ -51,11 +51,11 @@ export class FireAuthService {
     localStorage.setItem('userData', JSON.stringify(this.currentUser));
     this.loginBS.next(true);
     this.loader.hide();
-    if (this.redirectUrl != null) {
+    if (this.redirectUrl != null && this.redirectUrl !== '') {
       this.router.navigateByUrl(this.redirectUrl);
       this.redirectUrl = null;
     } else {
-      this.router.navigate(['home']);
+      this.router.navigate(['/home']);
     }
     // return userRef.set(data, { merge: true });
   }

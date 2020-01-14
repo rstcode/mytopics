@@ -1,12 +1,15 @@
-<a (click)="AddTopic()" href="javascript:void(0);">Add new topic</a>
+<!-- <a (click)="AddTopic()" href="javascript:void(0);">Add new topic</a> -->
+<button type="button" (click)="AddTopic()" class="btn btn-primary btn-sm">Add new topic</button>
 <br /><br />
 
-<p *ngIf="topics.length==0">Create your new topic here..</p>
+<p *ngIf="!topics">Loading topics..</p>
+<p *ngIf="topics && topics.length==0">Create your new topic <a (click)="AddTopic()" href="javascript:void(0);">here</a>..</p>
 <div>
   <div *ngFor="let topic of topics">
 
     <h5>{{topic.Header}} :</h5>
-    <p [innerHTML]="topic.Description|str2obj"></p>
+    <p *ngIf="!topic.ShowContent" (click)="topic.ShowContent=!topic.ShowContent" [innerHTML]="topic.Description | descMin:80:'more'"></p>
+    <p *ngIf="topic.ShowContent" (click)="topic.ShowContent=!topic.ShowContent" [innerHTML]="topic.Description | str2obj"></p>
     <div class="float-right">
       <small class="text-muted">
         {{topic.ModifiedDate}} | 

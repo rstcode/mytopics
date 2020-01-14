@@ -48,8 +48,8 @@
                     </div>
                     <div class="modal-footer">
                         <button type="button" *ngFor="let btn of formEntity.formActions" class="btn btn-default" (click)="onExternalBtnClick(btn.name)">{{btn.displayName}}</button>
-                        <button type="submit" *ngIf="formEntity.isSubmitBtn"  [disabled]="!cform.valid" class="btn btn-default">Submit</button>
-                        <button type="button" class="btn btn-default" (click)="onPopupCloseButton()">Close</button>
+                        <button type="submit" *ngIf="formEntity.isSubmitBtn"  [disabled]="!cform.valid" class="btn btn-primary">Submit</button>
+                        <button type="button" class="btn btn-secondary" (click)="onPopupCloseButton()">Close</button>
                     </div>
                 </form>
             </div>

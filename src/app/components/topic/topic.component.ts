@@ -14,9 +14,10 @@ import { SpinnerService } from '../spinner/spinner.service';
   styleUrls: ['./topic.component.css']
 })
 export class TopicComponent implements OnInit {
-  topics: Topic[] = [];
+  topics: Topic[] = null;
   openAll = false;
   currentTT: string;
+  noData = false;
   currentTTKey: string = null;
   popupData: { formEntity: FormEntity, popupDisplay: string };
   // tslint:disable-next-line:max-line-length
@@ -25,17 +26,16 @@ export class TopicComponent implements OnInit {
     this.popupData = { popupDisplay: 'none', formEntity: null };
     this.route.paramMap.subscribe(params => {
       this.currentTT = params.get('type');
-      this.sharedsvc.changeTitleBS(this.currentTT);
-      this.topics = [];
+      this.sharedsvc.changeTitleBS(this.currentTT);      
       // tslint:disable-next-line:curly
       if (this.currentTT !== undefined && this.currentTT !== null)
         this.GetTopicTypeKey();
     });
   }
   GetTopicTypeKey() {
-    //this.loader.show();
+    // this.loader.show();
     this.currentTTKey = this.firebaseService.getOffLinetype(this.currentTT);
-    if (this.currentTTKey == undefined || this.currentTTKey == null || this.currentTTKey == '') {
+    if (this.currentTTKey === undefined || this.currentTTKey == null || this.currentTTKey == '') {
       this.firebaseService.getTopicTypes(this.auth.currentUser).subscribe(data => {
         // tslint:disable-next-line:prefer-const
         let topicTypes: TopicType[] = [];
@@ -156,5 +156,9 @@ export class TopicComponent implements OnInit {
   popupDisplayEvent(event: any) {
     this.popupData.popupDisplay = event;
     this.sharedsvc.overlayClose();
+  }
+
+  alert2(){
+    alert('testttt');
   }
 }

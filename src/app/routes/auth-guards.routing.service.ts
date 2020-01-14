@@ -14,8 +14,9 @@ export class AuthGuard implements CanActivate {
     }
 
     this.toaster.info('Please login..');
-    // not logged in so redirect to login page with the return url and return false    
+    // not logged in so redirect to login page with the return url and return false
     this.auth.redirectUrl = state.url;
+    console.log(this.auth.redirectUrl);
     return false;
   }
 }
