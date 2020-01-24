@@ -89,7 +89,7 @@
               "src/assets"
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css"              
             ],
             "scripts": []
           }
@@ -121,7 +121,11 @@
         },
         "deploy": {
           "builder": "angular-cli-ghpages:deploy",
-          "options": {}
+          "options": {
+            "baseHref": "https://rstcode.github.io/mytopics/",
+            "name": "RST CODE",
+            "email": "team@angular.schule"
+          }
         }
       }
     }

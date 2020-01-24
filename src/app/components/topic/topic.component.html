@@ -8,13 +8,14 @@
   <div *ngFor="let topic of topics">
 
     <h5>{{topic.Header}} :</h5>
+    <!-- <p [innerHTML]="topic.Description|str2obj"></p> -->
     <p *ngIf="!topic.ShowContent" (click)="topic.ShowContent=!topic.ShowContent" [innerHTML]="topic.Description | descMin:80:'more'"></p>
     <p *ngIf="topic.ShowContent" (click)="topic.ShowContent=!topic.ShowContent" [innerHTML]="topic.Description | str2obj"></p>
     <div class="float-right">
       <small class="text-muted">
         {{topic.ModifiedDate}} | 
-        <a (click)="EditTopic(topic)" href="javascript:void(0);">Edit</a> |
-        <a (click)="DeleteTopic(topic)" href="javascript:void(0);">Delete</a>
+        <a (click)="EditTopic(topic)" href="javascript:void(0);"><i class="fa fa-pencil"></i></a> |
+        <a (click)="DeleteTopic(topic)" href="javascript:void(0);"><i class="fa fa-trash fa-1x text-danger"></i></a>
       </small>
     </div>
     <!-- <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p> -->

@@ -69,7 +69,7 @@ export class FireBaseService {
 
     updateTopicType(topicType: TopicType, uid: number) {
         this.topictypeRef = this.db.object(uid.toString() + '/types/' + topicType.$key);
-        this.topictypeRef.update({
+        return this.topictypeRef.update({
             Type: topicType.Type,
             ModifiedDate: this.getCurrentDate()
         });

@@ -13,7 +13,7 @@ import { SpinnerService } from '../spinner/spinner.service';
   styleUrls: ['./home.component.css']
 })
 export class HomeComponent implements OnInit {
-  topicTypes = [];
+  topicTypes = null;
   userName: string = 'Guest';
   popupData: { formEntity: FormEntity, popupDisplay: string };
   // tslint:disable-next-line:max-line-length
@@ -55,8 +55,30 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  edit(type: TopicType) {
-
+  edit(topicType: TopicType) {
+    let ntt = new TopicType();
+    ntt.Type = topicType.Type;
+    //topicType.Type = '';
+    this.sharedsvc.overlayOpen();
+    this.popupData.popupDisplay = 'block';
+    this.popupData.formEntity = this.getFormEntityForTopicType(topicType, 'Edit');
+    this.popupData.formEntity.submitCallBack = (formEntity: FormEntity) => {
+      this.loader.show();
+      topicType.Type = formEntity.formControls[0].val;
+      //console.log('submit add topic type event');
+      this.firebaseService.updateTopicType(topicType, this.auth.currentUser.uid).then(p => {
+        //topicType.$key = p.key;
+        //console.log(p.key);
+        this.popupData.popupDisplay = 'none';
+        //this.firebaseService.saveOffLinetypes(topicType);
+        this.toastr.success('successfully updated');
+        this.loader.hide();
+        this.sharedsvc.overlayClose();
+      }, er => {
+        this.sharedsvc.overlayClose();
+        this.loader.hide();
+      });
+    };
   }
 
   delete(type: TopicType) {
