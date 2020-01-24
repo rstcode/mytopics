@@ -26,6 +26,7 @@ export class TopicComponent implements OnInit {
     this.popupData = { popupDisplay: 'none', formEntity: null };
     this.route.paramMap.subscribe(params => {
       this.currentTT = params.get('type');
+      //console.log('ttype',this.currentTT);
       this.sharedsvc.changeTitleBS(this.currentTT);      
       // tslint:disable-next-line:curly
       if (this.currentTT !== undefined && this.currentTT !== null)

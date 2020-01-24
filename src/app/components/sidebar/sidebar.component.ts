@@ -22,7 +22,10 @@ export class SidebarComponent implements OnInit {
   ngOnInit() {
     this.popupData = { popupDisplay: 'none', formEntity: null };
     this.sharedsvc.slider.subscribe((p: any) => { this.sliderFlag = p; });
-    this.sharedsvc.titleText.subscribe(p => this.currentTT == p);
+    this.sharedsvc.titleText.subscribe(p => {
+      this.currentTT = p;
+      //console.log('ctt', this.currentTT);
+    });
     this.auth.loginStatus.subscribe(p => {
       if (!(p as boolean)) {
         this.topicTypes = null;

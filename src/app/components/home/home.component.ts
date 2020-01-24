@@ -45,14 +45,21 @@ export class HomeComponent implements OnInit {
           a['$key'] = item.key;
           this.topicTypes.push(a as TopicType);
         });
-        this.topicTypes = this.topicTypes.slice();
-        if (this.topicTypes.length > 0)
+        if (this.topicTypes.length > 0) {
+          this.topicTypes = this.topicTypes.sort(this.sort).slice();
           this.firebaseService.loadOffLinetypes(this.topicTypes);
+        }
       }
     }, er => {
       //console.log('topictypes error', er);
       this.toastr.error('failed');
     });
+  }
+
+  sort(a: any, b: any) {
+    // ASC  -> a.length - b.length
+    // DESC -> b.length - a.length
+    return a.Type.length - b.Type.length;
   }
 
   edit(topicType: TopicType) {
@@ -82,13 +89,17 @@ export class HomeComponent implements OnInit {
   }
 
   delete(type: TopicType) {
-    this.loader.show();
-    this.firebaseService.deleteTopicType(type.$key, this.auth.currentUser.uid).then(p => {
-      this.loader.hide();
-      this.toastr.success('Succsfully deleted..');
-    }, er => {
-      this.toastr.error('Failed');
-    });
+    const confirmValue = confirm('Are you sure..?');
+    if (confirmValue) {
+      this.loader.show();
+      this.firebaseService.deleteTopicType(type.$key, this.auth.currentUser.uid).then(p => {
+        this.loader.hide();
+        this.toastr.success('Deleted.');
+      }).catch(er => {
+        this.loader.hide();
+        this.toastr.error('Failed');
+      });
+    }
   }
 
   navigateTo(topicType: TopicType) {
