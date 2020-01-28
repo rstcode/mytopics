@@ -4,6 +4,9 @@
 - visit my site info
 - visit my site info text 
 
+# FunTest
+- smaple view  mode
+
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 8.3.20.
 
 ## Development server
