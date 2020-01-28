@@ -16,11 +16,13 @@ export class HomeComponent implements OnInit {
   topicTypes = null;
   userName: string = 'Guest';
   popupData: { formEntity: FormEntity, popupDisplay: string };
+  fullScreen = false;
   // tslint:disable-next-line:max-line-length
   constructor(private firebaseService: FireBaseService, private route: ActivatedRoute, private router: Router, private auth: FireAuthService, public sharedsvc: SharedService, private toastr: ToastrService, private loader: SpinnerService) { }
   ngOnInit() {
     this.popupData = { popupDisplay: 'none', formEntity: null };
     this.sharedsvc.changeTitleBS('My Topics');
+    this.sharedsvc.fullScreen.subscribe(p => this.fullScreen = p);
     if (this.auth.isAuthenticated()) {
       this.userName = this.auth.currentUser.displayName;
       this.loadTopicTypes();

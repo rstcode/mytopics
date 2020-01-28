@@ -6,11 +6,16 @@ import { BehaviorSubject } from 'rxjs';
 export class SharedService {
   private titleBS = new BehaviorSubject<string>('My title');
   titleText = this.titleBS.asObservable();
+
   private sliderBS = new BehaviorSubject<boolean>(false);
   private overlayBS = new BehaviorSubject<boolean>(false);
   private sliderStatus: boolean = false;
   slider = this.sliderBS.asObservable();
   overlay = this.overlayBS.asObservable();
+
+  private fullScreenBS = new BehaviorSubject<boolean>(false);
+  fullScreen = this.fullScreenBS.asObservable();
+ 
   constructor() { }
   changeTitleBS(title: string) {
     this.titleBS.next(title);
@@ -25,10 +30,10 @@ export class SharedService {
     this.sliderBS.next(true);
     this.overlayBS.next(true);
   }
-  overlayOpen(){
+  overlayOpen() {
     this.overlayBS.next(true);
   }
-  overlayClose(){
+  overlayClose() {
     this.overlayBS.next(false);
   }
 
@@ -38,6 +43,10 @@ export class SharedService {
     } else {
       this.sliderOpen();
     }
-
   }
+
+  toggelFullScreen(val: boolean) {
+    this.fullScreenBS.next(val);
+  }
+
 }

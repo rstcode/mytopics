@@ -11,9 +11,11 @@ export class HeaderComponent implements OnInit {
   IsLogin = false;
   title = 'My Topics';
   showFlag:boolean =false;
+  fullScreen: boolean =false;
   constructor(private route: ActivatedRoute, private router: Router, private auth: FireAuthService, public sharedsvc: SharedService) { }
   ngOnInit() {
     this.sharedsvc.titleText.subscribe(p => this.title = p );
+    this.sharedsvc.fullScreen.subscribe(p => this.fullScreen = p );
     this.auth.loginStatus.subscribe(p => {
       this.IsLogin = (p as boolean);
       if(!this.IsLogin){

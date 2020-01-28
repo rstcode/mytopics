@@ -86,10 +86,11 @@ export class FireBaseService {
         return this.topicsRef.snapshotChanges();
     }
 
-    addTopic(topic: Topic, typekey: string, uid: number) {
+    addTopic(topic: Topic, typekey: string, userInfo: User) {
         topic.ModifiedDate = this.getCurrentDate();
-        this.changePostCount(typekey, uid, 1);
-        this.topicsRef = this.db.list(uid.toString() + '/posts/' + typekey);
+        topic.ModifiedBy = userInfo.displayName;
+        this.changePostCount(typekey, userInfo.uid, 1);
+        this.topicsRef = this.db.list(userInfo.uid.toString() + '/posts/' + typekey);
         return this.topicsRef.push(topic);
     }
     changePostCount(typeKey: string, uid: number, cnt: number) {
@@ -103,12 +104,13 @@ export class FireBaseService {
             })
     }
 
-    updateTopic(topic: Topic, typekey: string, uid: number) {
+    updateTopic(topic: Topic, typekey: string, userInfo: User) {
         //this.topicRef = this.db.object('posts/' + topic.$key);
-        this.topicRef = this.db.object(uid.toString() + '/posts/' + typekey + '/' + topic.$key);
+        this.topicRef = this.db.object(userInfo.uid.toString() + '/posts/' + typekey + '/' + topic.$key);
         return this.topicRef.update({
             Header: topic.Header,
             Description: topic.Description,
+            ModifiedBy : userInfo.displayName,
             ModifiedDate: this.getCurrentDate()
         });
     }

@@ -4,7 +4,7 @@
 
     <div *ngIf="topicTypes && topicTypes.length==0">
       <br /><br />
-      <h1>WELCOME {{userName| uppercase}}</h1>
+      <h1 [ngStyle]="{'color': fullScreen ? '#b7cadc' : '#212529' }">WELCOME {{userName| uppercase}}</h1>
       <p>
         Swipe right to slider open, swipe left to navigate back
       </p>
@@ -19,7 +19,7 @@
     </div>
 
     <div *ngIf="topicTypes && topicTypes.length > 0">
-      <h4>Topics <b>List</b>
+      <h4 [ngStyle]="{'color': fullScreen ? '#b7cadc' : '#212529' }">Topics <b>List</b>
         <small class="text-muted float-right">
           <a (click)="addTopicTypePopup()" href="javascript:void(0);">Create Topic Type</a>
         </small></h4>

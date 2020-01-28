@@ -5,6 +5,7 @@ export class Topic {
     Description: string;
     TopicType: string;
     ModifiedDate: string;
+    ModifiedBy: string;
     // tslint:disable-next-line:no-inferrable-types
     ShowContent?: boolean = false;
 }
@@ -13,6 +14,7 @@ export class TopicType {
     Type: string;
     postsCount : number;
     ModifiedDate: string;
+    ModifiedBy: string;
 }
 export class FormEntity {
     formControls?: ControlEntity[];

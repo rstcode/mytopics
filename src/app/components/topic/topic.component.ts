@@ -20,14 +20,16 @@ export class TopicComponent implements OnInit {
   noData = false;
   currentTTKey: string = null;
   popupData: { formEntity: FormEntity, popupDisplay: string };
+  fullScreen = false;
   // tslint:disable-next-line:max-line-length
   constructor(private route: ActivatedRoute, private router: Router, private datepipe: DatePipe, private firebaseService: FireBaseService, private auth: FireAuthService, private toastr: ToastrService, public sharedsvc: SharedService, private loader: SpinnerService) { }
   ngOnInit() {
     this.popupData = { popupDisplay: 'none', formEntity: null };
+    this.sharedsvc.fullScreen.subscribe(p => this.fullScreen = p);
     this.route.paramMap.subscribe(params => {
       this.currentTT = params.get('type');
       //console.log('ttype',this.currentTT);
-      this.sharedsvc.changeTitleBS(this.currentTT);      
+      this.sharedsvc.changeTitleBS(this.currentTT);
       // tslint:disable-next-line:curly
       if (this.currentTT !== undefined && this.currentTT !== null)
         this.GetTopicTypeKey();
@@ -97,7 +99,7 @@ export class TopicComponent implements OnInit {
       topic.Description = formEntity.formControls[1].val;
       topic.TopicType = this.currentTTKey;
       //console.log('add submit event');
-      this.firebaseService.addTopic(topic, this.currentTTKey, this.auth.currentUser.uid).then(p => {
+      this.firebaseService.addTopic(topic, this.currentTTKey, this.auth.currentUser).then(p => {
         this.loader.hide();
         this.toastr.success('successfully added');
         this.sharedsvc.overlayClose();
@@ -116,7 +118,7 @@ export class TopicComponent implements OnInit {
       topic.Header = formEntity.formControls[0].val;
       topic.Description = formEntity.formControls[1].val;
       //console.log('edit submit event');
-      this.firebaseService.updateTopic(topic, this.currentTTKey, this.auth.currentUser.uid).then(p => {
+      this.firebaseService.updateTopic(topic, this.currentTTKey, this.auth.currentUser).then(p => {
         this.loader.hide();
         this.toastr.success('successfully updated');
         this.sharedsvc.overlayClose();
@@ -159,7 +161,7 @@ export class TopicComponent implements OnInit {
     this.sharedsvc.overlayClose();
   }
 
-  alert2(){
+  alert2() {
     alert('testttt');
   }
 }

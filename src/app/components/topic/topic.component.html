@@ -7,12 +7,14 @@
 <div>
   <div *ngFor="let topic of topics">
 
-    <h5>{{topic.Header}} :</h5>
+    <h5 (click)="topic.ShowContent=!topic.ShowContent" [ngStyle]="{'color': fullScreen ? '#b7cadc' : '#212529' }">{{topic.Header}} :</h5>
     <!-- <p [innerHTML]="topic.Description|str2obj"></p> -->
-    <p *ngIf="!topic.ShowContent" (click)="topic.ShowContent=!topic.ShowContent" [innerHTML]="topic.Description | descMin:80:'more'"></p>
-    <p *ngIf="topic.ShowContent" (click)="topic.ShowContent=!topic.ShowContent" [innerHTML]="topic.Description | str2obj"></p>
+    <p *ngIf="!topic.ShowContent"  [innerHTML]="topic.Description | descMin:80"></p>    
+    <p *ngIf="topic.ShowContent" [innerHTML]="topic.Description | str2obj"></p>    
     <div class="float-right">
       <small class="text-muted">
+        <a *ngIf="topic.Description.length>80" (click)="topic.ShowContent=!topic.ShowContent" href="javascript:void(0);">..show {{topic.ShowContent? 'less':'more' }}</a>|
+        <span *ngIf="topic.ModifiedBy">updated by: {{topic.ModifiedBy| lowercase}} |</span>
         {{topic.ModifiedDate}} | 
         <a (click)="EditTopic(topic)" href="javascript:void(0);"><i class="fa fa-pencil"></i></a> |
         <a (click)="DeleteTopic(topic)" href="javascript:void(0);"><i class="fa fa-trash fa-1x text-danger"></i></a>
