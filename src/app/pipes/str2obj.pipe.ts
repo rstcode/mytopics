@@ -5,16 +5,51 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class Str2objPipe implements PipeTransform {
   transform(value: string, args?: any): string {
     value = value.replace(/\r?\n/g, '<br />').trim();
-    return this.urlify(value);
+    //return this.urlify(value);
     let txt: string = this.urlify(value).toString()
     let lbArry = txt.split("<br />");
-    if (lbArry.length > 3 && args.ShowContent == false) {
-      lbArry = lbArry.slice(0, 2);
-      let res=lbArry.join("<br />")+"<a href=\"javascript:void(0);\" (click)=\"args.ShowContent='true'\">..more</a>";
+    if (lbArry.length > 0) {
+      let res = this.applyHtmlLines(lbArry);
       return res;
     }
+
     return txt;
   }
+
+  applyHtmlLines(strArry: string[]) {
+    let ulstated = false;
+
+    let str: string = '';
+
+    for (let i = 0; i < strArry.length; i++) {
+      if (strArry[i].startsWith('#')) {
+        str = str.concat('<font size="5">' + strArry[i].substring(1) + '</font><br />');
+      }
+      else if (strArry[i].startsWith('-')|| strArry[i].startsWith('>')) {
+        if (!ulstated) {
+          str = str.concat('<ul><li>' + strArry[i].substring(1) + '</li>');
+          ulstated = true;
+        }
+        else if (ulstated && i == (strArry.length - 1)) {
+          str = str.concat('<li>' + strArry[i].substring(1) + '</li></ul>');
+          ulstated = false;
+        }
+        else {
+          str = str.concat('<li>' + strArry[i].substring(1) + '</li>');
+        }
+      }
+      else if (ulstated) {
+        str = str.concat('</ul>' + strArry[i]);
+        ulstated = false;
+      }
+      else {
+        str += (i === 0) ? '' : '<br />';
+        str = str.concat(strArry[i]);
+      }
+    }
+    return str;
+  }
+
   urlify(text) {
     // or alternatively
     // return text.replace(urlRegex, '<a href="$1">$1</a>')

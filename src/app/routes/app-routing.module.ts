@@ -24,6 +24,11 @@ const routes: Routes = [
     canActivate: [AuthGuard]
   },
   {
+    path: 'topic/:shared/:type',
+    component: TopicComponent,
+    canActivate: [AuthGuard],
+  },
+  {
     path: 'topic/:type',
     component: TopicComponent,
     canActivate: [AuthGuard],

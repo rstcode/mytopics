@@ -17,20 +17,21 @@ export class TopicComponent implements OnInit {
   topics: Topic[] = null;
   openAll = false;
   currentTT: string;
+  sharedTopic = false;
   noData = false;
   currentTTKey: string = null;
   popupData: { formEntity: FormEntity, popupDisplay: string };
   fullScreen = false;
+
   // tslint:disable-next-line:max-line-length
   constructor(private route: ActivatedRoute, private router: Router, private datepipe: DatePipe, private firebaseService: FireBaseService, private auth: FireAuthService, private toastr: ToastrService, public sharedsvc: SharedService, private loader: SpinnerService) { }
   ngOnInit() {
     this.popupData = { popupDisplay: 'none', formEntity: null };
     this.sharedsvc.fullScreen.subscribe(p => this.fullScreen = p);
     this.route.paramMap.subscribe(params => {
+      this.sharedTopic = (params.get('shared') != null && params.get('shared') != null);
       this.currentTT = params.get('type');
-      //console.log('ttype',this.currentTT);
       this.sharedsvc.changeTitleBS(this.currentTT);
-      // tslint:disable-next-line:curly
       if (this.currentTT !== undefined && this.currentTT !== null)
         this.GetTopicTypeKey();
     });
@@ -38,8 +39,9 @@ export class TopicComponent implements OnInit {
   GetTopicTypeKey() {
     // this.loader.show();
     this.currentTTKey = this.firebaseService.getOffLinetype(this.currentTT);
+    let uid = this.sharedTopic ? this.sharedsvc.sharedUid : this.auth.currentUser.uid;
     if (this.currentTTKey === undefined || this.currentTTKey == null || this.currentTTKey == '') {
-      this.firebaseService.getTopicTypes(this.auth.currentUser).subscribe(data => {
+      this.firebaseService.getTopicTypes(uid).subscribe(data => {
         // tslint:disable-next-line:prefer-const
         let topicTypes: TopicType[] = [];
         if (data != null && data.length > 0) {
@@ -68,7 +70,8 @@ export class TopicComponent implements OnInit {
   }
 
   LoadTopics() {
-    this.firebaseService.getTopicsByType(this.currentTTKey, this.auth.currentUser.uid).subscribe(data => {
+    let uid = this.sharedTopic ? this.sharedsvc.sharedUid : this.auth.currentUser.uid;
+    this.firebaseService.getTopicsByType(this.currentTTKey, uid).subscribe(data => {
       if (data !== undefined && data !== null && data.length > 0) {
         this.topics = [];
         //console.log('topics', data);
@@ -98,8 +101,9 @@ export class TopicComponent implements OnInit {
       topic.Header = formEntity.formControls[0].val;
       topic.Description = formEntity.formControls[1].val;
       topic.TopicType = this.currentTTKey;
-      //console.log('add submit event');
-      this.firebaseService.addTopic(topic, this.currentTTKey, this.auth.currentUser).then(p => {
+
+      let uid = this.sharedTopic ? this.sharedsvc.sharedUid : this.auth.currentUser.uid;
+      this.firebaseService.addTopic(topic, this.currentTTKey, this.auth.currentUser.displayName, uid).then(p => {
         this.loader.hide();
         this.toastr.success('successfully added');
         this.sharedsvc.overlayClose();
@@ -118,7 +122,8 @@ export class TopicComponent implements OnInit {
       topic.Header = formEntity.formControls[0].val;
       topic.Description = formEntity.formControls[1].val;
       //console.log('edit submit event');
-      this.firebaseService.updateTopic(topic, this.currentTTKey, this.auth.currentUser).then(p => {
+      let uid = this.sharedTopic ? this.sharedsvc.sharedUid : this.auth.currentUser.uid;
+      this.firebaseService.updateTopic(topic, this.currentTTKey, this.auth.currentUser.displayName, uid).then(p => {
         this.loader.hide();
         this.toastr.success('successfully updated');
         this.sharedsvc.overlayClose();
@@ -134,7 +139,8 @@ export class TopicComponent implements OnInit {
     const confirmValue = confirm('Are you sure..?');
     if (confirmValue) {
       this.loader.show();
-      this.firebaseService.deleteTopic(topic.$key, this.currentTTKey, this.auth.currentUser.uid).then(p => {
+      let uid = this.sharedTopic ? this.sharedsvc.sharedUid : this.auth.currentUser.uid;
+      this.firebaseService.deleteTopic(topic.$key, this.currentTTKey, uid).then(p => {
         this.loader.hide();
         this.toastr.success('Deleted.');
       }).catch(er => {
@@ -153,15 +159,14 @@ export class TopicComponent implements OnInit {
   getFormControlsForTopic(data: Topic): ControlEntity[] {
     return [
       { name: 'Header', lableName: 'Header', val: data.Header, inputType: InputTypesEnum.text, order: 1, required: true },
-      { name: 'Description', lableName: 'Description', val: data.Description, inputType: InputTypesEnum.textarea, rows: 8, required: true }
+      {
+        name: 'Description', lableName: 'Description', extraplaceholder: "\nUse '#' to put subheading \nUse '-' to put bullet point",
+        val: data.Description, inputType: InputTypesEnum.textarea, rows: 8, required: true
+      }
     ];
   }
   popupDisplayEvent(event: any) {
     this.popupData.popupDisplay = event;
     this.sharedsvc.overlayClose();
-  }
-
-  alert2() {
-    alert('testttt');
   }
 }

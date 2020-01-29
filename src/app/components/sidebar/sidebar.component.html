@@ -16,6 +16,15 @@
         <li>
             <p *ngIf="!topicTypes || topicTypes.length==0">Loading Topics..</p>
         </li>
+        <li>
+            <a (click)="sharedTopicsView = !sharedTopicsView" href="javascript:void(0)">Shared Topics</a>
+            <ul *ngIf="sharedtopicTypes && sharedtopicTypes.length>0" class="collapse list-unstyled"
+                [ngClass]="{'show': sharedTopicsView}" id="homeSubmenu">
+                <li *ngFor="let stt of sharedtopicTypes">
+                    <a (click)="navigateTo(stt,true)" href="javascript:void(0)">{{stt.Type}}</a>
+                </li>
+            </ul>
+        </li>
         <li *ngFor="let topicType of topicTypes| rduplicates" [ngClass]="{'active': topicType.Type===currentTT}">
             <a (click)="navigateTo(topicType)" href="javascript:void(0)">{{topicType.Type}}</a>
         </li>

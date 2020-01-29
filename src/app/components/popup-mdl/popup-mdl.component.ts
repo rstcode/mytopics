@@ -23,6 +23,7 @@ export class PopupModelComponent {
     //endregion
     ngOnInit() {
         this.popDisplay = this.dataContext.popupDisplay;
+        console.log(this.dataContext.formEntity);
         this.formEntity = this.dataContext.formEntity;
         const fcGroup: any = {};
         this.formEntity.formControls.forEach(p => {

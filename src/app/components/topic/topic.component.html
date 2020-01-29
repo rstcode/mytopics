@@ -3,19 +3,22 @@
 <br /><br />
 
 <p *ngIf="!topics">Loading topics..</p>
-<p *ngIf="topics && topics.length==0">Create your new topic <a (click)="AddTopic()" href="javascript:void(0);">here</a>..</p>
+<p *ngIf="topics && topics.length==0">Create your new topic <a (click)="AddTopic()"
+    href="javascript:void(0);">here</a>..</p>
 <div>
   <div *ngFor="let topic of topics">
 
-    <h5 (click)="topic.ShowContent=!topic.ShowContent" [ngStyle]="{'color': fullScreen ? '#b7cadc' : '#212529' }">{{topic.Header}} :</h5>
+    <h4 (click)="topic.ShowContent=!topic.ShowContent" [ngStyle]="{'color': fullScreen ? '#b7cadc' : '#212529' }">
+      {{topic.Header}} :</h4>
     <!-- <p [innerHTML]="topic.Description|str2obj"></p> -->
-    <p *ngIf="!topic.ShowContent"  [innerHTML]="topic.Description | descMin:80"></p>    
-    <p *ngIf="topic.ShowContent" [innerHTML]="topic.Description | str2obj"></p>    
+    <p *ngIf="!topic.ShowContent" [innerHTML]="topic.Description | descMin:80:true"></p>
+    <div class="mytext" *ngIf="topic.ShowContent" [innerHTML]="topic.Description | str2obj"></div>
     <div class="float-right">
       <small class="text-muted">
-        <a *ngIf="topic.Description.length>80" (click)="topic.ShowContent=!topic.ShowContent" href="javascript:void(0);">..show {{topic.ShowContent? 'less':'more' }}</a>|
-        <span *ngIf="topic.ModifiedBy">updated by: {{topic.ModifiedBy| lowercase}} |</span>
-        {{topic.ModifiedDate}} | 
+        <a *ngIf="topic.Description.length>80" (click)="topic.ShowContent=!topic.ShowContent"
+          href="javascript:void(0);">..show {{topic.ShowContent? 'less':'more' }}</a>|
+        <span *ngIf="topic.ModifiedBy">updated by: {{topic.ModifiedBy| lowercase | descMin:15}} |</span>
+        {{topic.ModifiedDate}} |
         <a (click)="EditTopic(topic)" href="javascript:void(0);"><i class="fa fa-pencil"></i></a> |
         <a (click)="DeleteTopic(topic)" href="javascript:void(0);"><i class="fa fa-trash fa-1x text-danger"></i></a>
       </small>
@@ -25,16 +28,5 @@
   </div>
 </div>
 
-<popup *ngIf="popupData.popupDisplay==='block'" [dataContext]="popupData" (popupDisplay)="popupDisplayEvent($event)"></popup>
-<!--         
-        <a *ngFor="let topic of topics" href="javascript:void(0);" class="list-group-item list-group-item-action flex-column align-items-start">
-          <div class="d-flex w-100 justify-content-between" (click)="topic.ShowContent=!topic.ShowContent; openAll=false;">
-            <h5 class="mb-1">{{topic.Header}} :</h5>
-            <small class="text-muted">
-              <a (click)="EditTopic(topic)" href="javascript:void(0);">Edit</a> |
-              <a (click)="DeleteTopic(topic)" href="javascript:void(0);">Delete</a> |
-              {{topic.ModifiedDate}}</small>
-          </div>
-          <p class="mb-1 collapse" [ngClass]="{'show ':openAll || topic.ShowContent}" [innerHTML]="topic.Description|str2obj"></p>
-          <small *ngIf="!topic.ShowContent" [innerHTML]="topic.Description|descMin:40" class="text-muted"></small>
-        </a> -->
+<popup *ngIf="popupData.popupDisplay==='block'" [dataContext]="popupData" (popupDisplay)="popupDisplayEvent($event)">
+</popup>

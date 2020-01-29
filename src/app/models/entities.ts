@@ -1,10 +1,11 @@
-import {FormGroup} from '@angular/forms';
+import { FormGroup } from '@angular/forms';
 export class Topic {
     $key: string;
     Header: string;
     Description: string;
-    TopicType: string;
+    TopicType: string;    
     ModifiedDate: string;
+    CreatedBy: string;
     ModifiedBy: string;
     // tslint:disable-next-line:no-inferrable-types
     ShowContent?: boolean = false;
@@ -12,7 +13,8 @@ export class Topic {
 export class TopicType {
     $key: string;
     Type: string;
-    postsCount : number;
+    shared?: boolean;
+    postsCount: number;
     ModifiedDate: string;
     ModifiedBy: string;
 }
@@ -34,6 +36,7 @@ export class ControlEntity {
     name: string;
     lableName: string;
     inputType: InputTypesEnum;
+    extraplaceholder?: string;
     order?: number;
     options?: any[];
     val?: any;
@@ -50,8 +53,9 @@ export enum InputTypesEnum {
     text,
     number,
     dropdown,
-    radio,
-    textarea
+    checkbox,
+    textarea,
+    radio
 }
 
 export interface User {
@@ -60,4 +64,4 @@ export interface User {
     photoURL?: string;
     displayName?: string;
     favoriteColor?: string;
-  }
+}

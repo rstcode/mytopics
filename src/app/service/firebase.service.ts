@@ -43,28 +43,9 @@ export class FireBaseService {
         return '';
     }
 
-    getTopicTypes(userInfo: User) {
-        let types = this.db.list(userInfo.uid.toString() + '/types/');
+    getTopicTypes(uid: number) {
+        let types = this.db.list(uid.toString() + '/types/');
         return types.snapshotChanges();
-        this.db.object(userInfo.uid.toString()).snapshotChanges().subscribe(udata => {
-            if (udata.key == undefined) {
-                this.db.list('/').set(userInfo.uid.toString(), userInfo).then(sUData => {
-                    let udataList = this.db.list(userInfo.uid.toString());
-                    udataList.set('posts', { content: 'posts' }).then();
-                    udataList.set('types', { content: 'types' }).then(p => {
-                        this.topictypesRef = this.db.list(userInfo.uid.toString() + '/types/');
-                        return this.topictypesRef.snapshotChanges();
-                    });
-                    return this.topictypesRef.snapshotChanges();
-                });
-            }
-            else {
-                let types = this.db.list(userInfo.uid.toString() + '/types/');
-                return types.snapshotChanges();
-            }
-        });
-        //this.topictypesRef = this.db.list('/posttypes', ref => ref.orderByChild('UId').equalTo(uid));
-        //return this.topictypesRef.snapshotChanges();
     }
 
     updateTopicType(topicType: TopicType, uid: number) {
@@ -86,11 +67,12 @@ export class FireBaseService {
         return this.topicsRef.snapshotChanges();
     }
 
-    addTopic(topic: Topic, typekey: string, userInfo: User) {
+    addTopic(topic: Topic, typekey: string, userName: string, uid: number) {
         topic.ModifiedDate = this.getCurrentDate();
-        topic.ModifiedBy = userInfo.displayName;
-        this.changePostCount(typekey, userInfo.uid, 1);
-        this.topicsRef = this.db.list(userInfo.uid.toString() + '/posts/' + typekey);
+        topic.CreatedBy = userName;
+        topic.ModifiedBy = userName;
+        this.changePostCount(typekey, uid, 1);
+        this.topicsRef = this.db.list(uid.toString() + '/posts/' + typekey);
         return this.topicsRef.push(topic);
     }
     changePostCount(typeKey: string, uid: number, cnt: number) {
@@ -104,13 +86,13 @@ export class FireBaseService {
             })
     }
 
-    updateTopic(topic: Topic, typekey: string, userInfo: User) {
+    updateTopic(topic: Topic, typekey: string, userName: string, uid: number) {
         //this.topicRef = this.db.object('posts/' + topic.$key);
-        this.topicRef = this.db.object(userInfo.uid.toString() + '/posts/' + typekey + '/' + topic.$key);
+        this.topicRef = this.db.object(uid.toString() + '/posts/' + typekey + '/' + topic.$key);
         return this.topicRef.update({
             Header: topic.Header,
             Description: topic.Description,
-            ModifiedBy : userInfo.displayName,
+            ModifiedBy: userName,
             ModifiedDate: this.getCurrentDate()
         });
     }

@@ -14,9 +14,11 @@ export class SidebarComponent implements OnInit {
 
   // @Output() sliderEmit = new EventEmitter<boolean>();
   topicTypes = [];
+  sharedtopicTypes = [];
   currentTT = '';
   titile = '';
   sliderFlag: boolean = false;
+  sharedTopicsView = false;
   popupData: { formEntity: FormEntity, popupDisplay: string };
   constructor(private router: Router, private firebaseService: FireBaseService, private auth: FireAuthService, public sharedsvc: SharedService, private toastr: ToastrService) { }
   ngOnInit() {
@@ -42,12 +44,16 @@ export class SidebarComponent implements OnInit {
     this.sharedsvc.sliderClose();
     this.router.navigate(['home']);
   }
-  navigateTo(topicType: TopicType) {
+  navigateTo(topicType: TopicType, sharedtopic: boolean = false) {
     this.sharedsvc.sliderClose();
-    this.router.navigate(['topic/', topicType.Type]);
+    if (sharedtopic)
+      this.router.navigate(['topic/', 'rst', topicType.Type]);
+    else
+      this.router.navigate(['topic/', topicType.Type]);
   }
   loadTopicTypes() {
-    this.firebaseService.getTopicTypes(this.auth.currentUser).subscribe(data => {
+    this.loadSharedTopicTypes();
+    this.firebaseService.getTopicTypes(this.auth.currentUser.uid).subscribe(data => {
       this.topicTypes = [];
       //console.log('types', data);
       if (data != null && data.length > 0) {
@@ -68,30 +74,26 @@ export class SidebarComponent implements OnInit {
     });
   }
 
-  // addTopicType() {
-  //   if (!this.auth.isAuthenticated()) {
-  //     this.toastr.info('Please login..!');
-  //     this.sharedsvc.sliderClose();
-  //   } else {
-  //     const newTopicType = prompt('Enter new cource name:', '');
-  //     if (newTopicType === null || newTopicType === '') { return; }
-  //     const topicTypeObj: TopicType = new TopicType();
-  //     topicTypeObj.Type = newTopicType;
-  //     this.firebaseService.addTopicType(topicTypeObj, this.auth.currentUser.uid).then(p => {
-  //       topicTypeObj.$key = p.key;
-  //       console.log(p.key);
-  //       this.popupData.popupDisplay = 'none';
-  //       this.firebaseService.saveOffLinetypes(topicTypeObj);
-  //       this.firebaseService.insertTypekeyInPosts(this.auth.currentUser.uid, p.key, topicTypeObj.Type).then(q => {
-  //         this.toastr.success('successfully added');
-  //         this.navigateTo(topicTypeObj);
-  //         this.loadTopicTypes();
-  //       });
-  //     }, er => {
+  loadSharedTopicTypes() {
+    this.firebaseService.getTopicTypes(this.sharedsvc.sharedUid).subscribe(data => {
+      this.sharedtopicTypes = [];
+      //console.log('types', data);
+      if (data != null && data.length > 0) {
+        data.forEach(item => {
+          // tslint:disable-next-line:prefer-const
+          let a = item.payload.toJSON();
+          // tslint:disable-next-line:no-string-literal
+          a['$key'] = item.key;
+          this.sharedtopicTypes.push(a as TopicType);
+        });
+        this.sharedtopicTypes = this.sharedtopicTypes.slice();
+      }
+    }, er => {
+      //console.log('topictypes error', er);
+      this.toastr.error('failed to sahred topictypes');
+    });
+  }
 
-  //     });
-  //   }
-  // }
   addTopicTypePopup() {
     if (!this.auth.isAuthenticated()) {
       this.toastr.info('Please login..!');
@@ -106,14 +108,18 @@ export class SidebarComponent implements OnInit {
     topicType.Type = '';
     this.popupData.formEntity = this.getFormEntityForTopicType(topicType, 'Add');
     this.popupData.formEntity.submitCallBack = (formEntity: FormEntity) => {
+      /* after form submit */
       topicType.Type = formEntity.formControls[0].val;
-      //console.log('submit add topic type event');
-      this.firebaseService.addTopicType(topicType, this.auth.currentUser.uid).then(p => {
+      let uid = this.auth.currentUser.uid;
+      if (formEntity.formControls[1].val === true)
+        uid = this.sharedsvc.sharedUid;
+      this.firebaseService.addTopicType(topicType, uid).then(p => {
         topicType.$key = p.key;
-        //console.log(p.key);
         this.popupData.popupDisplay = 'none';
-        this.firebaseService.saveOffLinetypes(topicType);
-        this.firebaseService.insertTypekeyInPosts(this.auth.currentUser.uid, p.key, topicType.Type).then(q => {
+        if (uid != this.sharedsvc.sharedUid)
+          this.firebaseService.saveOffLinetypes(topicType);
+
+        this.firebaseService.insertTypekeyInPosts(uid, p.key, topicType.Type).then(q => {
           this.toastr.success('successfully added');
           //this.topicTypes = this.topicTypes.slice();
           this.navigateTo(topicType);
@@ -134,7 +140,8 @@ export class SidebarComponent implements OnInit {
   }
   getFormControlsForTopicType(data: TopicType): ControlEntity[] {
     return [
-      { name: 'Type', lableName: 'Type', val: data.Type, inputType: InputTypesEnum.text, order: 1, required: true }
+      { name: 'Type', lableName: 'Type', val: data.Type, inputType: InputTypesEnum.text, order: 1, required: true },
+      { name: 'shared', lableName: 'Make it shared', val: data.shared, inputType: InputTypesEnum.checkbox, order: 2 }
     ];
   }
   popupDisplayEvent(event: any) {

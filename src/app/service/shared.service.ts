@@ -12,10 +12,11 @@ export class SharedService {
   private sliderStatus: boolean = false;
   slider = this.sliderBS.asObservable();
   overlay = this.overlayBS.asObservable();
+  public sharedUid = 77777777777;
 
   private fullScreenBS = new BehaviorSubject<boolean>(false);
   fullScreen = this.fullScreenBS.asObservable();
- 
+
   constructor() { }
   changeTitleBS(title: string) {
     this.titleBS.next(title);

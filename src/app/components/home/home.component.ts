@@ -36,7 +36,7 @@ export class HomeComponent implements OnInit {
   }
 
   loadTopicTypes() {
-    this.firebaseService.getTopicTypes(this.auth.currentUser).subscribe(data => {
+    this.firebaseService.getTopicTypes(this.auth.currentUser.uid).subscribe(data => {
       this.topicTypes = [];
       //console.log('types', data);
       if (data != null && data.length > 0) {

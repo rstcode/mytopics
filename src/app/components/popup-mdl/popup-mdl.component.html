@@ -19,6 +19,7 @@
                                     <input type="text" [formControlName]="control.name" class="form-control"  placeholder="Enter {{control.lableName}} here">
                                 </div>
                             </div>
+
                             <!--input number control -->
                             <div *ngSwitchCase=1 class="form-group">
                                 <label [attr.for]="control.name" class="col-xs-2 control-label">{{control.lableName}} :</label>
@@ -39,7 +40,15 @@
                             <div *ngSwitchCase=4 class="form-group">
                                 <label [attr.for]="control.name" class="col-xs-2 control-label">{{control.lableName}} :</label>
                                 <div class="col-xs-10">
-                                    <textarea class="form-control" [formControlName]="control.name" [rows]="control.rows||4" placeholder="Enter {{control.lableName}} here" ></textarea>
+                                    <textarea class="form-control" [formControlName]="control.name" [rows]="control.rows||4" placeholder="Enter {{control.lableName}} here {{control?.extraplaceholder}}" ></textarea>
+                                </div>
+                            </div>
+
+                            <!--CheckBox control -->
+                            <div *ngSwitchCase=3 class="form-group">
+                                <div class="custom-control custom-checkbox">
+                                    <input type="checkbox" [formControlName]="control.name" class="custom-control-input" id="defaultUnchecked">
+                                    <label class="custom-control-label" for="defaultUnchecked">{{control.lableName}}</label>
                                 </div>
                             </div>
                         </div>
