@@ -113,6 +113,8 @@ export class SidebarComponent implements OnInit {
       let uid = this.auth.currentUser.uid;
       if (formEntity.formControls[1].val === true)
         uid = this.sharedsvc.sharedUid;
+        
+      topicType.CreatedBy = this.auth.currentUser.displayName;
       this.firebaseService.addTopicType(topicType, uid).then(p => {
         topicType.$key = p.key;
         this.popupData.popupDisplay = 'none';
@@ -122,7 +124,10 @@ export class SidebarComponent implements OnInit {
         this.firebaseService.insertTypekeyInPosts(uid, p.key, topicType.Type).then(q => {
           this.toastr.success('successfully added');
           //this.topicTypes = this.topicTypes.slice();
-          this.navigateTo(topicType);
+          if (formEntity.formControls[1].val === true)
+            this.navigateTo(topicType, true);
+          else
+            this.navigateTo(topicType);
         });
       }, er => {
 

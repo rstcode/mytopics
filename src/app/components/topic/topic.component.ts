@@ -20,6 +20,7 @@ export class TopicComponent implements OnInit {
   sharedTopic = false;
   noData = false;
   currentTTKey: string = null;
+  currentUserName = '';
   popupData: { formEntity: FormEntity, popupDisplay: string };
   fullScreen = false;
 
@@ -28,6 +29,7 @@ export class TopicComponent implements OnInit {
   ngOnInit() {
     this.popupData = { popupDisplay: 'none', formEntity: null };
     this.sharedsvc.fullScreen.subscribe(p => this.fullScreen = p);
+    this.currentUserName=this.auth.currentUser.displayName;
     this.route.paramMap.subscribe(params => {
       this.sharedTopic = (params.get('shared') != null && params.get('shared') != null);
       this.currentTT = params.get('type');
@@ -84,11 +86,14 @@ export class TopicComponent implements OnInit {
             this.topics.push(a as Topic);
           }
         });
+        console.log(this.topics);
+        console.log(this.currentUserName);
       }
     }, er => {
       if (er.error) { this.router.navigate(['/home']); }
     });
   }
+
   AddTopic() {
     //
     const topic = new Topic();

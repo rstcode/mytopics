@@ -16,6 +16,7 @@ export class TopicType {
     shared?: boolean;
     postsCount: number;
     ModifiedDate: string;
+    CreatedBy?: string;
     ModifiedBy: string;
 }
 export class FormEntity {
